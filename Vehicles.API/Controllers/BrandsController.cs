@@ -1,26 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
-using Vehicles.API.Data;
+using System;
 using Vehicles.API.Data.Entities;
+using Vehicles.API.Data;
 
 namespace Vehicles.API.Controllers
 {
-    public class VehicleTypesController : Controller
+    public class BrandsController: Controller
     {
-        private readonly DataContext _context;
 
-        public VehicleTypesController(DataContext context)
+        private readonly DataContext _context;
+        public BrandsController(DataContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.VehicleTypes.ToListAsync());
+            return View(await _context.Brands.ToListAsync());
         }
-
 
 
         public IActionResult Create()
@@ -31,13 +30,13 @@ namespace Vehicles.API.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(VehicleType vehicleType)
+        public async Task<IActionResult> Create(Brand brand)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _ = _context.Add(vehicleType);
+                    _ = _context.Add(brand);
                     _ = await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -46,7 +45,7 @@ namespace Vehicles.API.Controllers
 
                     if (ex.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de vehiculo.");
+                        ModelState.AddModelError(string.Empty, "Ya existe esta marca.");
                     }
                     else
                     {
@@ -58,7 +57,7 @@ namespace Vehicles.API.Controllers
                     ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
-            return View(vehicleType);
+            return View(brand);
         }
 
 
@@ -69,16 +68,16 @@ namespace Vehicles.API.Controllers
                 return NotFound();
             }
 
-            VehicleType vehicleType = await _context.VehicleTypes.FindAsync(id);
-            return vehicleType == null ? NotFound() : View(vehicleType);
+            Brand brand = await _context.Brands.FindAsync(id);
+            return brand == null ? NotFound() : View(brand);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, VehicleType vehicleType)
+        public async Task<IActionResult> Edit(int id, Brand brand)
         {
-            if (id != vehicleType.Id)
+            if (id != brand.Id)
             {
                 return NotFound();
             }
@@ -87,7 +86,7 @@ namespace Vehicles.API.Controllers
             {
                 try
                 {
-                    _ = _context.Update(vehicleType);
+                    _ = _context.Update(brand);
                     _ = await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -96,7 +95,7 @@ namespace Vehicles.API.Controllers
 
                     if (ex.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de vehiculo.");
+                        ModelState.AddModelError(string.Empty, "Ya existe esta marca.");
                     }
                     else
                     {
@@ -109,7 +108,7 @@ namespace Vehicles.API.Controllers
                 }
             }
 
-            return View(vehicleType);
+            return View(brand);
         }
 
 
@@ -120,14 +119,14 @@ namespace Vehicles.API.Controllers
                 return NotFound();
             }
 
-            VehicleType vehicleType = await _context.VehicleTypes
+            Brand brand = await _context.Brands
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicleType == null)
+            if (brand == null)
             {
                 return NotFound();
             }
 
-            _ = _context.VehicleTypes.Remove(vehicleType);
+            _ = _context.Brands.Remove(brand);
             _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
