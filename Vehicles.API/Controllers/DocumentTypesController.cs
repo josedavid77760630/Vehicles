@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using System;
 using Vehicles.API.Data.Entities;
 using Vehicles.API.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Vehicles.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class DocumentTypesController: Controller
     {
 

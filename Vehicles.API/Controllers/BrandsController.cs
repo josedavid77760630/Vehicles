@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using System;
 using Vehicles.API.Data.Entities;
 using Vehicles.API.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Vehicles.API.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class BrandsController: Controller
     {
 

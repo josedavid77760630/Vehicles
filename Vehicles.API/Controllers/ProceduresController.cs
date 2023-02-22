@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using System;
 using Vehicles.API.Data;
 using Vehicles.API.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Vehicles.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProceduresController: Controller
     {
         private readonly DataContext _context;
