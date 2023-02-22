@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vehicles.API.Data;
+using Vehicles.API.Data.Entities;
+using Vehicles.API.Helpers;
 
 namespace Vehicles.API
 {
@@ -21,11 +24,21 @@ namespace Vehicles.API
         public void ConfigureServices(IServiceCollection services)
         {
             _ = services.AddControllersWithViews();
+            _ = services.AddIdentity<User, IdentityRole>(x =>
+            {
+                x.User.RequireUniqueEmail = true;
+                x.Password.RequireDigit = false;
+                x.Password.RequiredUniqueChars = 0;
+                x.Password.RequireUppercase = false;
+                x.Password.RequireNonAlphanumeric = false;
+                x.Password.RequireLowercase = false;
+            }).AddEntityFrameworkStores<DataContext>();
             _ = services.AddDbContext<DataContext>(x =>
             {
                 _ = x.UseSqlServer(Configuration.GetConnectionString("Cnn"));
             });
-            services.AddTransient<SeedDb>();
+            _ = services.AddTransient<SeedDb>();
+            _ = services.AddScoped<IUserHelper, UserHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +56,7 @@ namespace Vehicles.API
             }
             _ = app.UseHttpsRedirection();
             _ = app.UseStaticFiles();
-
+            _ = app.UseAuthentication();
             _ = app.UseRouting();
 
             _ = app.UseAuthorization();

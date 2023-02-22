@@ -2,54 +2,90 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicles.API.Data.Entities;
+using Vehicles.API.Helpers;
+using Vehicles.Common.Enums;
 
 namespace Vehicles.API.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
+        private readonly IUserHelper _userHelper;
 
-        public SeedDb(DataContext context)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
         public async Task SeedAsync()
         {
-            await _context.Database.EnsureCreatedAsync();
+            _ = await _context.Database.EnsureCreatedAsync();
             await CheckVehicleTypesAsync();
             await CheckBrandsAsync();
             await CheckDocumentTypesAsync();
             await CheckProceduresAsync();
+            await CheckRolesAsync();
+            await CheckUsersAsync("1010", "Jose", "Mamani", "jose@yopmail.com", "123456789", "Vinto calle 3", UserType.Admin);
+            await CheckUsersAsync("2020", "David", "Zapata", "david@yopmail.com", "123456789", "Vinto calle 3", UserType.User);
+            await CheckUsersAsync("3030", "Juan", "Zuluaga", "zulu@yopmail.com", "123456789", "Vinto calle 3", UserType.User);
 
+        }
+
+        private async Task CheckUsersAsync(string document, string firstName, string lastName, string email, string phoneNumber, string address, UserType userType)
+        {
+            User user = await _userHelper.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Address = address,
+                    Document = document,
+                    DocumentType = _context.DocumentTypes.FirstOrDefault(x=> x.Description == "Cedula de Identidad"),
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    PhoneNumber = phoneNumber,
+                    UserName = email,
+                    UserType = userType
+                };
+                await _userHelper.AddUserAsync(user, "123456");
+                await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+            }
+        }
+
+        private async Task CheckRolesAsync()
+        {
+            await _userHelper.CheckRoleAsync(UserType.Admin.ToString());
+            await _userHelper.CheckRoleAsync(UserType.User.ToString());
         }
 
         private async Task CheckProceduresAsync()
         {
-            if(!_context.Procedures.Any())
+            if (!_context.Procedures.Any())
             {
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Alineacion" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Lubricacion de suspencion" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Frenos delanteros" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Frenos traseros" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Liquido frenos traseros" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Liquido frenos delanteros" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Calibracion de valvulas" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Alineacion de carburador" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Aceite de motor" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Aceite de caja" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Filtro de aire" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Sistema electrico" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio llanta delantera" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio llanta trasera" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Reparacion de motor" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Kit de arrastre" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio de bateria" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio de bujia" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio rodamiento delantero" });
-                _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio rodamiento trasero" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Alineacion" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Lubricacion de suspencion" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Frenos delanteros" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Frenos traseros" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Liquido frenos traseros" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Liquido frenos delanteros" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Calibracion de valvulas" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Alineacion de carburador" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Aceite de motor" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Aceite de caja" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Filtro de aire" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Sistema electrico" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio llanta delantera" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio llanta trasera" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Reparacion de motor" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Kit de arrastre" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio de bateria" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio de bujia" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio rodamiento delantero" });
+                _ = _context.Procedures.Add(new Procedure { Price = 1000, Description = "Cambio rodamiento trasero" });
 
-                await _context.SaveChangesAsync();
+                _ = await _context.SaveChangesAsync();
             }
         }
 
@@ -57,11 +93,11 @@ namespace Vehicles.API.Data
         {
             if (!_context.DocumentTypes.Any())
             {
-                _context.DocumentTypes.Add(new DocumentType { Description = "Cedula de Identidad" });
-                _context.DocumentTypes.Add(new DocumentType { Description = "Pasaporte" });
-                _context.DocumentTypes.Add(new DocumentType { Description = "Libreta Servicio Militar" });
+                _ = _context.DocumentTypes.Add(new DocumentType { Description = "Cedula de Identidad" });
+                _ = _context.DocumentTypes.Add(new DocumentType { Description = "Pasaporte" });
+                _ = _context.DocumentTypes.Add(new DocumentType { Description = "Libreta Servicio Militar" });
 
-                await _context.SaveChangesAsync();
+                _ = await _context.SaveChangesAsync();
 
             }
         }
@@ -70,22 +106,22 @@ namespace Vehicles.API.Data
         {
             if (!_context.Brands.Any())
             {
-                _context.Brands.Add(new Brand { Description = "Ducati" });
-                _context.Brands.Add(new Brand { Description = "Toyota" });
-                _context.Brands.Add(new Brand { Description = "Nissan" });
-                _context.Brands.Add(new Brand { Description = "KIA" });
-                _context.Brands.Add(new Brand { Description = "Honda" });
-                _context.Brands.Add(new Brand { Description = "Kawasaki" });
-                _context.Brands.Add(new Brand { Description = "BMW" });
-                _context.Brands.Add(new Brand { Description = "KTM" });
-                _context.Brands.Add(new Brand { Description = "Yamaha" });
-                _context.Brands.Add(new Brand { Description = "Mazda" });
-                _context.Brands.Add(new Brand { Description = "Foton" });
-                _context.Brands.Add(new Brand { Description = "Renault" });
-                _context.Brands.Add(new Brand { Description = "Crevrolet" });
-                _context.Brands.Add(new Brand { Description = "suzuki" });
+                _ = _context.Brands.Add(new Brand { Description = "Ducati" });
+                _ = _context.Brands.Add(new Brand { Description = "Toyota" });
+                _ = _context.Brands.Add(new Brand { Description = "Nissan" });
+                _ = _context.Brands.Add(new Brand { Description = "KIA" });
+                _ = _context.Brands.Add(new Brand { Description = "Honda" });
+                _ = _context.Brands.Add(new Brand { Description = "Kawasaki" });
+                _ = _context.Brands.Add(new Brand { Description = "BMW" });
+                _ = _context.Brands.Add(new Brand { Description = "KTM" });
+                _ = _context.Brands.Add(new Brand { Description = "Yamaha" });
+                _ = _context.Brands.Add(new Brand { Description = "Mazda" });
+                _ = _context.Brands.Add(new Brand { Description = "Foton" });
+                _ = _context.Brands.Add(new Brand { Description = "Renault" });
+                _ = _context.Brands.Add(new Brand { Description = "Crevrolet" });
+                _ = _context.Brands.Add(new Brand { Description = "suzuki" });
 
-                await _context.SaveChangesAsync();
+                _ = await _context.SaveChangesAsync();
 
             }
         }
@@ -94,12 +130,12 @@ namespace Vehicles.API.Data
         {
             if (!_context.VehicleTypes.Any())
             {
-                _context.VehicleTypes.Add(new VehicleType { Description = "Carro" });
-                _context.VehicleTypes.Add(new VehicleType { Description = "Moto" });
-                _context.VehicleTypes.Add(new VehicleType { Description = "Camion" });
+                _ = _context.VehicleTypes.Add(new VehicleType { Description = "Carro" });
+                _ = _context.VehicleTypes.Add(new VehicleType { Description = "Moto" });
+                _ = _context.VehicleTypes.Add(new VehicleType { Description = "Camion" });
 
-                await _context.SaveChangesAsync();
-                
+                _ = await _context.SaveChangesAsync();
+
             }
         }
     }
