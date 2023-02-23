@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vehicles.API.Data.Entities
 {
@@ -14,8 +14,10 @@ namespace Vehicles.API.Data.Entities
 
         [Display(Name = "Precio")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        [RegularExpression((@"^(0|-?\d{0,16}(\.\d{0,2})?)$"))]
+        [RegularExpression(@"^(0|-?\d{0,16}(\.\d{0,2})?)$")]
         [Range(0, 9999999999.999999)]
         public decimal Price { get; set; }
+
+        public ICollection<Detail> Details { get; set; }
     }
 }

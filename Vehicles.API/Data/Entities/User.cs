@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 using Vehicles.Common.Enums;
 
 namespace Vehicles.API.Data.Entities
 {
-    public class User: IdentityUser
+    public class User : IdentityUser
     {
 
         [Display(Name = "Nombres")]
@@ -28,11 +28,11 @@ namespace Vehicles.API.Data.Entities
         [MaxLength(12, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres.")]
         public string Document { get; set; }
 
-        [Display(Name = "Direccion")]       
+        [Display(Name = "Direccion")]
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres.")]
         public string Address { get; set; }
 
-        [Display(Name ="Foto")]
+        [Display(Name = "Foto")]
         public Guid ImageId { get; set; }
 
         [Display(Name = "Foto")]
@@ -40,12 +40,14 @@ namespace Vehicles.API.Data.Entities
             ? $"https://localhost:44305/images/no-image.png"
             : $"";
 
-        [Display(Name ="Tipo de usuario")]
+        [Display(Name = "Tipo de usuario")]
         public UserType UserType { get; set; }
 
         [Display(Name = "Usuario")]
         public string FullName => $"{FirstName} {LastName}";
 
+        public ICollection<Vehicle> Vehicles { get; set; }
+       
     }
 
 }
