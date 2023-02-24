@@ -30,8 +30,8 @@ namespace Vehicles.API.Helpers
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
                 UserName = model.Email,
-                UserType = model.UserType
-             
+                UserType = model.UserType,
+
             };
         }
 
@@ -41,7 +41,7 @@ namespace Vehicles.API.Helpers
             {
                 Address = user.Address,
                 Document = user.Document,
-                //DocumentTypeId = user.DocumentType.Id,
+                DocumentTypeId = user.DocumentType.Id,
                 DocumentTypes = _combosHelper.GetComboDocumentTypes(),
                 Email = user.Email,
                 FirstName = user.FirstName,
