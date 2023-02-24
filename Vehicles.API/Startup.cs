@@ -33,6 +33,11 @@ namespace Vehicles.API
                 x.Password.RequireNonAlphanumeric = false;
                 x.Password.RequireLowercase = false;
             }).AddEntityFrameworkStores<DataContext>();
+            services.ConfigureApplicationCookie(x =>
+            {
+                x.LoginPath = "/Account/NotAuthorized";
+                x.AccessDeniedPath = "/Account/NotAuthorized";
+            });
             _ = services.AddDbContext<DataContext>(x =>
             {
                 _ = x.UseSqlServer(Configuration.GetConnectionString("Cnn"));
@@ -57,6 +62,7 @@ namespace Vehicles.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 _ = app.UseHsts();
             }
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
             _ = app.UseHttpsRedirection();
             _ = app.UseStaticFiles();
             _ = app.UseAuthentication();
