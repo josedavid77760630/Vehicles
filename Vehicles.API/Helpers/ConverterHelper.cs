@@ -53,5 +53,41 @@ namespace Vehicles.API.Helpers
 
             };
         }
+
+        public async Task<Vehicle> ToVehicleAsync(VehicleViewModel model, bool isNew)
+        {
+            return new Vehicle
+            {
+                Brand = await _context.Brands.FindAsync(model.BrandId),
+                Color = model.Color,
+                Id = isNew ? 0 : model.Id,
+                Line = model.Line,
+                Model = model.Model,
+                Plaque = model.Plaque.ToUpper(),
+                Remarks = model.Remarks,
+                VehicleType = await _context.VehicleTypes.FindAsync(model.VehicleTypeId)
+            };
+        }
+
+        public VehicleViewModel ToVehicleViewModel(Vehicle vehicle)
+        {
+            return new VehicleViewModel
+            {
+                BrandId = vehicle.Brand.Id,
+                Brands = _combosHelper.GetComboBrads(),
+                Color = vehicle.Color,
+                Id = vehicle.Id,
+                Line = vehicle.Line,
+                Model = vehicle.Model,
+                Plaque = vehicle.Plaque.ToUpper(),
+                Remarks = vehicle.Remarks,
+                UserId = vehicle.User.Id,
+                VehiclePhotos = vehicle.VehiclePhotos,
+                VehicleTypeId = vehicle.VehicleType.Id,
+                VehicleTypes = _combosHelper.GetComboVehicleTypes(),
+            };
+        }
+
+
     }
 }
